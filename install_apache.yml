@@ -4,19 +4,24 @@
   become: true
   tasks:
 
-  - name: update repository index
-    apt:
+  - name: install apache and php for ubuntu servers
+    apt: # package: generic package manager in ansible
+      name:
+        - apache2
+        - libapache2-mod-php
       update_cache: yes
-    when: ansible_distribution in ["ubuntu", "debian"] # for multiple distros
-
-  - name: install apache2 package
-    apt:
-      name: apache2
       state: latest
-    when: ansible_distribution == "ubuntu" # for single distros
+    when: ansible_distribution == "ubuntu"
 
-  - name: add php support for apache
-    apt:
-      name: libapache2-mod-php
+  - name: install apache and php for centos servers
+    dnf:
+      name:
+        - httpd
+        - php
       state: latest
-    when: ansible_distribution == "ubuntu" and ansible_distribution_version == "20.04"
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+# when: ansible_distribution == "ubuntu" and ansible_distribution_version == "20.04"
+# when: ansible_distribution in ["ubuntu", "debian"] # for multiple distros
+# when: ansible_distribution == "ubuntu" # for single distros
