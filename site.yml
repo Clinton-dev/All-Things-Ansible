@@ -4,17 +4,15 @@
   become: true
   pre_tasks: # task should be performed first before everything
 
-  - name: install updates (CentOS)
+  - name: update repo cache (CentOS)
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
     when: ansible_distribution == "CentOS"
 
-  - name: install updates (ubuntu)
+  - name: update repo cache (ubuntu)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
@@ -22,26 +20,14 @@
   become: true
   tasks:
 
-    - name: create simone user
-      tags: always
-      user:
-        name: simone
-        groups: root
-
+# TODO: Add ssh key management
+# - Add task to remove old/ corrupted key
+# - while This ! can be used to add new/ uncorrupted key
     - name: add ssh key for simone
       tags: always
       authorized_key:
         user: simone
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHeCEYD/KV0NbCmm2CgR84LSLJoc0Ru/sqw5FyPEaktd Ansible"
-
-    - name: add sudoers file for simone
-      tags: always
-      copy:
-        src: sudoer_simone
-        dest: /etc/sudoers.d/simone
-        owner: root
-        group: root
-        mode: 0440
 
 - hosts: workstations
   become: true
