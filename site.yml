@@ -35,13 +35,12 @@
       owner: root
       group: root
 
-
 - hosts: apache_web_servers
   become: true
   tasks:
 
   - name: install apache and php for ubuntu servers
-    tags: apache, apache2, ubuntu
+    tags: apache, apache, ubuntu
     apt: # package: generic package manager in ansible
       name:
         - apache2
@@ -51,7 +50,7 @@
     when: ansible_distribution == "Ubuntu"
 
   - name: install apache and php for centos servers
-    tags: apache, centos, httpd
+    tags: apache,centos,httpd
     dnf:
       name:
         - httpd
@@ -59,6 +58,30 @@
       state: latest
       update_cache: yes
     when: ansible_distribution == "CentOS"
+
+  - name: start httpd (CentOS)
+    tags: apache, centos, httpd
+    service:
+     name: httpd
+     state: started
+     enabled: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: change email address for admin
+    tags: apache, centos, httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin wambuguclinton@outlook.com
+    when: ansible_distribution == "CentOS"
+    register: httpd
+
+  - name: restart httpd (CentOS)
+    tags: httpd, apache, centos
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
 
   - name: copy default html file for site
     tags: apache, apache2, httpd

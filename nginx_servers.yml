@@ -1,0 +1,20 @@
+- hosts: nginx_web_servers
+  become: true
+  vars_files:
+    - php.yml
+  tasks:
+
+    - name: install nginx and php for ubuntu servers
+      tags: ubuntu, nginx, php
+      apt:
+        name:
+          - "php{{php_version}}-fpm"
+          - "php{{php_version}}-mysql"
+          - "php{{php_version}}-curl"
+          - "php{{php_version}}-mbstring"
+          - "php{{php_version}}-xml"
+          - "php{{php_version}}-zip"
+          - "php{{php_version}}-imagick"
+          - nginx
+        state: latest
+        update_cache: yes

@@ -22,6 +22,8 @@
       update_cache: yes
     when: ansible_distribution == "CentOS"
 
+
+
 # when: ansible_distribution == "ubuntu" and ansible_distribution_version == "20.04"
 # when: ansible_distribution in ["ubuntu", "debian"] # for multiple distros
 # when: ansible_distribution == "ubuntu" # for single distros
